@@ -177,6 +177,11 @@ footer{padding:56px 30px 40px;text-align:center;}
 </head>
 <body>
 
+<audio id="bgMusic" src="musica.mp3" loop preload="auto"></audio>
+<button id="musicToggle" aria-label="Música" style="position:fixed;bottom:22px;right:22px;z-index:60;width:48px;height:48px;border-radius:50%;border:1px solid var(--gold);background:var(--paper);color:var(--gold-deep);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.12);cursor:pointer;">
+  <svg id="musicIcon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+</button>
+
 <!-- ════════ SPLASH ════════ -->
 <div id="splash">
   <div id="petals"></div>
@@ -392,14 +397,32 @@ document.title=CONFIG.noivos+' — Casamento';
   }
 })();
 
-/* ─── SPLASH dismiss ─── */
+/* ─── SPLASH dismiss + MÚSICA ─── */
+const bgMusic = document.getElementById('bgMusic');
+const musicToggle = document.getElementById('musicToggle');
+const musicIcon = document.getElementById('musicIcon');
+const ICON_ON  = '<path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>';
+const ICON_OFF = '<path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" opacity=".35"/><path d="M3 3l18 18" stroke="currentColor" stroke-width="2"/>';
+
 document.getElementById('splash').addEventListener('click',function(){
   this.classList.add('hide');
+  bgMusic.play().catch(()=>{ /* navegador bloqueou autoplay; o botão de música ainda funciona */ });
   setTimeout(()=>{
     this.style.display='none';
     document.getElementById('main').classList.add('visible');
     initReveal(); startCountdown();
   },950);
+});
+
+musicToggle.addEventListener('click', function(e){
+  e.stopPropagation();
+  if (bgMusic.paused){
+    bgMusic.play();
+    musicIcon.innerHTML = ICON_ON;
+  } else {
+    bgMusic.pause();
+    musicIcon.innerHTML = ICON_OFF;
+  }
 });
 
 /* ─── REVEAL ─── */
